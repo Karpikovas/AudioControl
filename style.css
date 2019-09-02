@@ -1,0 +1,105 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100vh;
+  justify-content: center;
+  align-items: middle;
+  background: #483D8B
+}
+
+audio {
+  display: none;
+}
+.input-file {
+  width:.1px;
+  height:.1px;
+  opacity:0;
+  overflow:hidden;
+  position:absolute;
+  z-index:-1
+}
+.labelFile{ 
+  overflow:hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.btn-file {
+  width: 3em;
+  height: 3em;
+  margin-bottom: 1em;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 34px;
+  opacity: 0.6;
+  color: white;
+}
+.btn-file:hover {
+  opacity: 1;
+}
+
+/*--------------------------------------*/
+
+.audio {
+  margin: 1em;
+  height: 2.5em;
+  width: 22em;
+
+  background: #9370DB;
+  border-radius: 10px;
+  border: 2px dashed white;
+
+
+}
+.audio__item {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+
+  margin: 5px 10px 0;
+}
+
+.audio__icon {
+  height: 2em;
+  width: 2em;
+  color: white;
+  opacity: 0.6;
+}
+
+.audio__icon:hover {
+  opacity: 1;
+}
+
+.audio__progress-bar__back {
+  height: 0.5em;
+  width: 13.5em;
+  background: #DDA0DD;
+  border-radius: 10px;
+
+}
+
+.audio__progress-bar__front {
+  height: 100%;
+  width: 100%;
+  background: #9400D3;
+  border-radius: 10px;
+
+  margin: 0;
+  transform-origin: top left;
+  transform: scale(0, 1);
+
+}
+
+.text-label {
+  text-align: center;
+  color: white;
+}
