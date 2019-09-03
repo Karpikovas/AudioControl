@@ -2,22 +2,6 @@
     const CONTAINER = document.querySelector('main');
     const BTNADD = document.querySelector('.input-file');
 
-    /*
-      <div class="audio">
-        <a class="audio__item audio__icon">
-          <i class="fas fa-play"></i>
-        </a>
-
-        <div class="audio__item audio__progress-bar__back">
-          <div class="audio__item audio__progress-bar__front"></div>
-        </div>
-
-        <a class="audio__item audio__icon">
-          <i class="fas fa-stop"></i>
-        </a>
-
-      </div>
-    */
     function Audio(options) {
         var path = options.path;
 
