@@ -35,7 +35,7 @@ audio {
 .btn-file {
   width: 3em;
   height: 3em;
-  margin-bottom: 1em;
+  margin: 1em 0 1em;
   border-radius: 10px;
   text-align: center;
   font-size: 34px;
