@@ -26,7 +26,7 @@ audio {
   position:absolute;
   z-index:-1
 }
-.labelFile{ 
+.labelFile{
   overflow:hidden;
   width: 100%;
   height: 100%;
@@ -51,7 +51,7 @@ audio {
 .audio {
   margin: 1em;
   height: 2.5em;
-  width: 22em;
+  width: 30em;
 
   background: #9370DB;
   border-radius: 10px;
@@ -102,4 +102,32 @@ audio {
 .text-label {
   text-align: center;
   color: white;
+  cursor: default;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 6em;
+  height: 0.5em;
+  border-radius: 5px;
+  background: #DDA0DD;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #9400D3;
+}
+
+.slider::-moz-range-thumb {
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: #9400D3;
 }
