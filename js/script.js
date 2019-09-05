@@ -13,7 +13,11 @@
         BTNADD.addEventListener('change', getFile, false);
 
         document.querySelector('simple-slider').addEventListener('slide', function (event) {
-            console.log(event.detail);
+            console.log(document.querySelector('simple-slider').value);
+        });
+
+        document.querySelector('volume-slider').addEventListener('change', function (event) {
+            console.log(document.querySelector('volume-slider').volume);
         });
     }
 
