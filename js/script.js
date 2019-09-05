@@ -7,6 +7,15 @@
 
     function init() {
         bindEvents();
+
+        let options = {
+            container: CONTAINER
+        };
+
+        let player = new Player(options);
+        player.render();
+
+        player.addTrack('audio.mp3');
     }
 
     function bindEvents() {

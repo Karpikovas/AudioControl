@@ -1,85 +1,49 @@
 'use strict';
 
+const volumeTemplate = document.createElement('template');
+
+volumeTemplate.innerHTML = `
+  <style>
+    .audio__item {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+   }
+    .audio__icon {
+      height: 2em;
+      width: 2em;
+      color: white;
+      opacity: 0.6;
+    }
+    
+    .audio__icon:hover {
+      opacity: 1;
+    }
+  </style>
+  <simple-slider small="" value="50" class="audio__item" min="0" max="100"></simple-slider>
+  <a class="audio__item audio__icon"><i class="fas fa-volume-down"></i></a>
+  <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+`;
+
+
 class VolumeSlider extends HTMLElement {
   constructor() {
     super();
+
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.appendChild(volumeTemplate.content.cloneNode(true));
+
+    this.slider = this.shadowRoot.querySelector('simple-slider');
+    this.btnVolume = this.shadowRoot.querySelector('a');
+    this.volumeIcon = this.shadowRoot.querySelector('i');
+
+    this.bindEvents();
   }
 
 
   connectedCallback() {
     this.volume = this.getAttribute('volume') || undefined;
-
-    let slider = document.createElement('simple-slider');
-    slider.setAttribute('small', '');
-    slider.setAttribute('value', this.volume);
-    slider.classList.add('audio__item');
-
-
-
-    let btnVolume = document.createElement('a');
-    btnVolume.classList.add('audio__item');
-    btnVolume.classList.add('audio__icon');
-
-    let volumeIcon = document.createElement('i');
-    volumeIcon.classList.add('fas');
-    volumeIcon.classList.add('fa-volume-down');
-
-    btnVolume.appendChild(volumeIcon);
-
-    let fontAwesome = document.createElement('link');
-    fontAwesome.rel = 'stylesheet';
-    fontAwesome.href = 'https://kit-free.fontawesome.com/releases/latest/css/free.min.css';
-    fontAwesome.media = "all";
-
-
-    this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = `
-
-      <style>
-        .audio__item {
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-          background: transparent;
-       }
-        .audio__icon {
-          height: 2em;
-          width: 2em;
-          color: white;
-          opacity: 0.6;
-        }
-        
-        .audio__icon:hover {
-          opacity: 1;
-        }
-      </style>
-    `;
-
-    slider.addEventListener('slide', () => {
-      this.volume = slider.value / 100;
-      if (slider.value == 0) {
-        toggleIcon(volumeIcon, 'fa-volume-down', 'fa-volume-mute');
-      } else if (slider.value > 0 && volumeIcon.classList.contains('fa-volume-mute')) {
-        toggleIcon(volumeIcon, 'fa-volume-mute', 'fa-volume-down');
-      }
-    });
-
-    btnVolume.onclick = () => {
-      if (volumeIcon.classList.contains('fa-volume-down')) {
-        toggleIcon(volumeIcon, 'fa-volume-down', 'fa-volume-mute');
-        this.volume = 0;
-        slider.value = 0;
-      } else {
-        toggleIcon(volumeIcon, 'fa-volume-mute', 'fa-volume-down');
-        this.volume = 1;
-        slider.value = 30;
-      }
-    };
-
-
-    this.shadowRoot.appendChild(slider);
-    this.shadowRoot.appendChild(btnVolume);
-    this.shadowRoot.appendChild(fontAwesome);
   }
 
   get volume() {
@@ -100,6 +64,28 @@ class VolumeSlider extends HTMLElement {
     }));
   }
 
+  bindEvents() {
+    this.slider.addEventListener('slide', () => {
+      this.volume = this.slider.value / 100;
+      if (this.slider.value == 0) {
+        toggleIcon(this.volumeIcon, 'fa-volume-down', 'fa-volume-mute');
+      } else if (this.slider.value > 0 && this.volumeIcon.classList.contains('fa-volume-mute')) {
+        toggleIcon(this.volumeIcon, 'fa-volume-mute', 'fa-volume-down');
+      }
+    });
+
+    this.btnVolume.onclick = () => {
+      if (this.volumeIcon.classList.contains('fa-volume-down')) {
+        toggleIcon(this.volumeIcon, 'fa-volume-down', 'fa-volume-mute');
+        this.volume = 0;
+        this.slider.value = 0;
+      } else {
+        toggleIcon(this.volumeIcon, 'fa-volume-mute', 'fa-volume-down');
+        this.volume = 1;
+        this.slider.value = 30;
+      }
+    };
+  }
 
 }
 function toggleIcon(icon, remove, add) {
