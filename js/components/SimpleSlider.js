@@ -57,13 +57,7 @@ class Slider extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.dispatchEvent(new CustomEvent('slide', {
-      bubbles: true,
-      composed: true
-    }));
-
-    this.sliderFront.style.width = newValue + '%'
-
+    this.sliderFront.style.width = newValue + '%';
   }
 
   get value() {
@@ -102,6 +96,10 @@ class Slider extends HTMLElement {
         if (left > right) {
           left = right;
         }
+        this.dispatchEvent(new CustomEvent('slide', {
+          bubbles: true,
+          composed: true
+        }));
         this.value = (this.max - this.min) * (left / right);
       };
 

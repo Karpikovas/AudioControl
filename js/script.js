@@ -15,7 +15,7 @@
         let player = new Player(options);
         player.render();
 
-        player.addTrack('audio.mp3');
+        player.addTrack('audio/audio2.mp3');
     }
 
     function bindEvents() {

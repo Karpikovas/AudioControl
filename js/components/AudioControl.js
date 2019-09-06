@@ -67,9 +67,9 @@ class AudioControl extends HTMLElement {
     this.btnPlay = this.shadowRoot.querySelector('.audio__icon');
     this.playIcon = this.shadowRoot.querySelector('.fas');
 
-    console.log(this.btnPlay, this.playIcon);
 
     this.volumeSlider = this.shadowRoot.querySelector('volume-slider');
+    this.progressBar = this.shadowRoot.querySelector('simple-slider');
 
     this.bindEvents();
   }
@@ -81,14 +81,13 @@ class AudioControl extends HTMLElement {
   }
 
   static get observedAttributes() {
-    // return ['volume'];
+     return ['value'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    // this.dispatchEvent(new CustomEvent('change', {
-    //   bubbles: true,
-    //   composed: true
-    // }));
+    if (name === 'value') {
+      this.progressBar.value = newValue;
+    }
   }
   get src() {
     return this.getAttribute('src') || undefined;
@@ -104,6 +103,14 @@ class AudioControl extends HTMLElement {
 
   set volume(value) {
     this.setAttribute('volume', value);
+  }
+
+  get value() {
+    return this.getAttribute('value') || undefined;
+  }
+
+  set value(value) {
+    this.setAttribute('value', value);
   }
 
   bindEvents() {
@@ -129,7 +136,18 @@ class AudioControl extends HTMLElement {
         composed: true
       }));
       this.volume = this.volumeSlider.volume;
-    })
+    });
+
+    this.progressBar.addEventListener('slide', () => {
+      this.dispatchEvent(new CustomEvent('timechange', {
+        bubbles: true,
+        composed: true
+      }));
+
+      this.value = this.progressBar.value;
+
+      console.log(this.progressBar.value);
+    });
   }
 
 }
