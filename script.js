@@ -177,7 +177,11 @@
         }
 
 
-        this.render = render;
+        // this.render = render;
+
+        return {
+          render: render
+        }
     }
 
     function init() {
