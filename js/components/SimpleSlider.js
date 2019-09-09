@@ -1,5 +1,6 @@
 'use strict';
 
+/*----------Шаблон слайдера-----------------------------*/
 const sliderTemplate = document.createElement('template');
 
 sliderTemplate.innerHTML = `
@@ -32,8 +33,10 @@ class Slider extends HTMLElement {
   constructor() {
     super();
 
+    /*---------------Создание Shadow Root------------*/
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(sliderTemplate.content.cloneNode(true));
+
 
     this.sliderFront = this.shadowRoot.querySelector('.audio__slider__front');
     this.sliderContainer = this.shadowRoot.querySelector('.audio__slider__back');
@@ -42,11 +45,14 @@ class Slider extends HTMLElement {
   }
 
   connectedCallback() {
+    /*------Выбор значений из атрибутов--------------*/
+
     this.value = this.getAttribute('value') || undefined;
     this.min = this.getAttribute('min') || 0;
     this.max = this.getAttribute('max') || 100;
 
 
+    /*---------Изменение размера слайдера при наличии атрибута small--------------*/
     if (this.hasAttribute('small')) {
       this.sliderContainer.style.width = 6 + 'em';
     }
@@ -85,6 +91,7 @@ class Slider extends HTMLElement {
   bindEvents() {
     this.sliderContainer.onmousedown = (evt) => {
 
+
       let move = (evt) => {
         let left = evt.pageX - sliderCoords.left;
 
@@ -96,11 +103,16 @@ class Slider extends HTMLElement {
         if (left > right) {
           left = right;
         }
+
+        this.value = (this.max - this.min) * (left / right);
+
+        /*-------------Создание события slide-----------------*/
         this.dispatchEvent(new CustomEvent('slide', {
           bubbles: true,
-          composed: true
+          composed: true,
+          detail: this.value
         }));
-        this.value = (this.max - this.min) * (left / right);
+
       };
 
       let sliderCoords = getCoords(this.sliderContainer);

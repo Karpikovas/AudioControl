@@ -14,6 +14,7 @@ function Player(options) {
     bindEvents();
   }
 
+  /*---------------Добавление нового трека-----------------*/
   function addTrack(src) {
     let audioControl = new AudioControl(src);
     CONTAINER.appendChild(audioControl);
@@ -23,42 +24,73 @@ function Player(options) {
     source.setAttribute('type', 'audio/mpeg');
 
     audioElement.appendChild(source);
+
+    if (currentAudioControl === undefined) {
+      currentAudioControl = audioControl;
+      currentAudioControl.enable();
+    }
+
     bindAudioEvents(audioControl);
   }
 
+  /*------------------События интерфейса аудио-------------------------*/
   function bindAudioEvents(audioControl) {
     audioControl.addEventListener('play', () => {
 
-      audioElement.currentTime = 12;
-
-      audioElement.play();
       if (currentAudioControl !== audioControl) {
-        currentAudioControl = audioControl;
-
+        if (!audioElement.paused) {
+          currentAudioControl.togglePlay();
+          audioElement.pause();
+        }
+        loadNextTrack(audioControl);
       }
+      audioElement.play();
     });
 
 
     audioControl.addEventListener('pause', () => {audioElement.pause()});
-    audioControl.addEventListener('volumechange', () => {
-      // let tue = audioControl.volume;
-      // audioElement.volume = tue.toFixed(1)
-
+    audioControl.addEventListener('volumechange', (e) => {
+      audioElement.volume = audioControl.volume;
     });
 
-    audioControl.addEventListener('timechange', () => {
+    audioControl.addEventListener('timechange', (e) => {
+      audioElement.currentTime = e.detail * audioElement.duration / 100;
     });
+
+    audioControl.addEventListener('speedchange', () => audioElement.playbackRate = audioControl.speed);
   }
 
+  /*----------События тэга Audio---------------------*/
   function bindEvents() {
-
-
     audioElement.ontimeupdate = function() {
       if (currentAudioControl) {
         currentAudioControl.value = audioElement.currentTime / audioElement.duration * 100;
       }
     };
 
+    audioElement.onended = function () {
+      currentAudioControl.togglePlay();
+      if (currentAudioControl.nextSibling) {
+        loadNextTrack(currentAudioControl.nextSibling);
+        currentAudioControl.togglePlay();
+      } else {
+        currentAudioControl.value = 0;
+      }
+    };
+
+  }
+
+  /*------------Загрузка следующего трека------------------*/
+  function loadNextTrack(elem) {
+
+    currentAudioControl.disable();
+    currentAudioControl.value = 0;
+
+    currentAudioControl = elem;
+    currentAudioControl.enable();
+
+    audioElement.src = elem.src;
+    audioElement.load();
   }
 
   return {

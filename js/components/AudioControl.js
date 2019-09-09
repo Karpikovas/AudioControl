@@ -12,6 +12,7 @@ audioTemplate.innerHTML = `
       background: #9370DB;
       border-radius: 10px;
       border: 2px dashed white;
+      -webkit-user-select: none;
     }
     .audio__item {
       display: inline-flex;
@@ -33,6 +34,11 @@ audioTemplate.innerHTML = `
       text-align: center;
       color: white;
       cursor: default;
+      -webkit-user-select: none;
+    }
+    .disabled {
+      pointer-events: none;
+      opacity: 0.3;
     }
   </style>
   
@@ -43,12 +49,12 @@ audioTemplate.innerHTML = `
       <i class="fas fa-play" aria-hidden="true"></i>
     </a>
     
-    <simple-slider min="0" max="100" value="0" class="audio__item"></simple-slider>
+    <simple-slider min="0" max="100" value="0" class="audio__item disabled"></simple-slider>
     
-    <volume-slider volume="50" class="audio__item"></volume-slider>
+    <volume-slider volume="0.50" class="audio__item disabled"></volume-slider>
     
     
-    <div class="audio__item text-label">1x</div>
+    <div class="audio__item text-label disabled">1x</div>
     
   </div>
   <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
@@ -66,7 +72,7 @@ class AudioControl extends HTMLElement {
     this.textLabel = this.shadowRoot.querySelector('.text-label');
     this.btnPlay = this.shadowRoot.querySelector('.audio__icon');
     this.playIcon = this.shadowRoot.querySelector('.fas');
-
+    this.btnSpeed = this.shadowRoot.querySelector('.audio__item.text-label');
 
     this.volumeSlider = this.shadowRoot.querySelector('volume-slider');
     this.progressBar = this.shadowRoot.querySelector('simple-slider');
@@ -113,41 +119,82 @@ class AudioControl extends HTMLElement {
     this.setAttribute('value', value);
   }
 
+  get speed() {
+    return this.getAttribute('speed') || undefined;
+  }
+
+  set speed(value) {
+    this.setAttribute('speed', value);
+  }
+
+  togglePlay() {
+    if (this.playIcon.classList.contains('fa-play')) {
+      this.dispatchEvent(new CustomEvent('play', {
+        bubbles: true,
+        composed: true
+      }));
+      toggleIcon(this.playIcon, 'fa-play', 'fa-stop');
+    } else {
+      this.dispatchEvent(new CustomEvent('pause', {
+        bubbles: true,
+        composed: true
+      }));
+      toggleIcon(this.playIcon, 'fa-stop', 'fa-play');
+    }
+  }
+
   bindEvents() {
     this.btnPlay.onclick = () => {
-      if (this.playIcon.classList.contains('fa-play')) {
-        this.dispatchEvent(new CustomEvent('play', {
-          bubbles: true,
-          composed: true
-        }));
-        toggleIcon(this.playIcon, 'fa-play', 'fa-stop');
-      } else {
-        this.dispatchEvent(new CustomEvent('pause', {
-          bubbles: true,
-          composed: true
-        }));
-        toggleIcon(this.playIcon, 'fa-stop', 'fa-play');
-      }
+      this.togglePlay();
     };
 
     this.volumeSlider.addEventListener('change', () => {
+      this.volume = this.volumeSlider.volume;
+
       this.dispatchEvent(new CustomEvent('volumechange', {
         bubbles: true,
-        composed: true
+        composed: true,
       }));
-      this.volume = this.volumeSlider.volume;
+
+
+
     });
 
-    this.progressBar.addEventListener('slide', () => {
+    this.progressBar.addEventListener('slide', (e) => {
+      this.value = e.detail;
+
       this.dispatchEvent(new CustomEvent('timechange', {
+        bubbles: true,
+        composed: true,
+        detail: e.detail
+      }));
+    });
+
+    this.btnSpeed.onclick = () => {
+      if (this.btnSpeed.innerText !== '2x') {
+        this.btnSpeed.innerText = '2x';
+        this.speed = 2;
+      } else {
+        this.btnSpeed.innerText = '1x';
+        this.speed = 1;
+      }
+      this.dispatchEvent(new CustomEvent('speedchange', {
         bubbles: true,
         composed: true
       }));
+    };
+  }
 
-      this.value = this.progressBar.value;
+  disable() {
+    this.volumeSlider.classList.add('disabled');
+    this.progressBar.classList.add('disabled');
+    this.btnSpeed.classList.add('disabled');
+  }
 
-      console.log(this.progressBar.value);
-    });
+  enable() {
+    this.volumeSlider.classList.remove('disabled');
+    this.progressBar.classList.remove('disabled');
+    this.btnSpeed.classList.remove('disabled');
   }
 
 }

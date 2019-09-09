@@ -28,9 +28,11 @@ volumeTemplate.innerHTML = `
 
 
 class VolumeSlider extends HTMLElement {
+
   constructor() {
     super();
 
+    /*---------------Создание Shadow Root------------*/
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(volumeTemplate.content.cloneNode(true));
 
@@ -65,29 +67,42 @@ class VolumeSlider extends HTMLElement {
   }
 
   bindEvents() {
-    this.slider.addEventListener('slide', () => {
+
+    /*---------Изменение атрибута громкости по слайдеру-----------------*/
+    this.slider.addEventListener('slide', (e) => {
+
       this.volume = this.slider.value / 100;
-      if (this.slider.value == 0) {
+
+      if (this.volume == 0) {
         toggleIcon(this.volumeIcon, 'fa-volume-down', 'fa-volume-mute');
-      } else if (this.slider.value > 0 && this.volumeIcon.classList.contains('fa-volume-mute')) {
+      } else if (this.volume > 0 && this.volumeIcon.classList.contains('fa-volume-mute')) {
         toggleIcon(this.volumeIcon, 'fa-volume-mute', 'fa-volume-down');
       }
     });
 
+    /*---------Изменение атрибута громкости по нажатию на кнопку-----------------*/
     this.btnVolume.onclick = () => {
+
       if (this.volumeIcon.classList.contains('fa-volume-down')) {
+
         toggleIcon(this.volumeIcon, 'fa-volume-down', 'fa-volume-mute');
+
         this.volume = 0;
         this.slider.value = 0;
+
       } else {
+
         toggleIcon(this.volumeIcon, 'fa-volume-mute', 'fa-volume-down');
-        this.volume = 1;
+
+        this.volume = 0.3;
         this.slider.value = 30;
+
       }
     };
   }
 
 }
+
 function toggleIcon(icon, remove, add) {
   icon.classList.remove(remove);
   icon.classList.add(add);
