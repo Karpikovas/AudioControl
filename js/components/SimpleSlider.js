@@ -63,14 +63,20 @@ class Slider extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this.sliderFront.style.width = newValue + '%';
+    this.sliderFront.style.width = newValue + '%';    
+    /*if (name === 'value') {
+      this._progress = parseInt(newValue);
+      this.render();
+    }*/
   }
 
   get value() {
     return this.getAttribute('value');
+    //return this._progress;
   }
   set value(value) {
     this.setAttribute('value', value);
+    //this._progress = value;
   }
 
   get max() {
@@ -106,7 +112,11 @@ class Slider extends HTMLElement {
 
         this.value = (this.max - this.min) * (left / right);
 
+        // this._progress = (this.max - this.min) * (left / right);
+        // render();
+
         /*-------------Создание события slide-----------------*/
+
         this.dispatchEvent(new CustomEvent('slide', {
           bubbles: true,
           composed: true,
