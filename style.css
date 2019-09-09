@@ -10,8 +10,6 @@
   align-items: center;
 
   min-height: 100vh;
-  justify-content: center;
-  align-items: middle;
   background: #483D8B
 }
 
@@ -59,6 +57,7 @@ audio {
 
 
 }
+
 .audio__item {
   display: inline-flex;
   justify-content: center;
@@ -89,13 +88,11 @@ audio {
 
 .audio__progress-bar__front {
   height: 100%;
-  width: 100%;
+  width: 80%;
   background: #9400D3;
   border-radius: 10px;
 
   margin: 0;
-  transform-origin: top left;
-  transform: scale(0, 1);
 
 }
 
